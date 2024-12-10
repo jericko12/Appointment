@@ -38,7 +38,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 // Get appointments with filter
-$query = "SELECT * FROM appointments WHERE client_id = ?";
+$query = "SELECT a.*, m.username as moderator_name, a.updated_at 
+          FROM appointments a 
+          LEFT JOIN users m ON a.updated_by = m.id 
+          WHERE a.client_id = ?";
+
 if ($filter_status !== 'all') {
     $query .= " AND status = ?";
 }
@@ -313,14 +317,17 @@ $appointments = $stmt->fetchAll();
                 <?php else: ?>
                     <?php foreach ($appointments as $appointment): ?>
                         <div class="appointment-card">
-                            <h3><?= htmlspecialchars($appointment['title']) ?></h3>
-                            <p><?= htmlspecialchars($appointment['description']) ?></p>
-                            <p>Date: <?= $appointment['appointment_date'] ?></p>
-                            <p>Time: <?= $appointment['appointment_time'] ?></p>
-                            <p>Status: <span class="status-<?= $appointment['status'] ?>">
-                                <?= ucfirst($appointment['status']) ?>
-                            </span></p>
-                        </div>
+                        <h3><?= htmlspecialchars($appointment['title']) ?></h3>
+                        <p><?= htmlspecialchars($appointment['description']) ?></p>
+                        <p>Date: <?= date('F d, Y', strtotime($appointment['appointment_date'])) ?></p>
+                        <p>Time: <?= date('h:i A', strtotime($appointment['appointment_time'])) ?></p>
+                        <p>Status: <span class="status-<?= $appointment['status'] ?>">
+                            <?= ucfirst($appointment['status']) ?>
+                        </span></p>
+                        <?php if ($appointment['status'] !== 'pending'): ?>
+                            <p>Updated: <?= date('F d, Y h:i A', strtotime($appointment['updated_at'])) ?></p>
+                        <?php endif; ?>
+                    </div>
                     <?php endforeach; ?>
                 <?php endif; ?>
             </div>

@@ -420,8 +420,8 @@ $user_counts = $stmt->fetch();
                                 <h3><?= htmlspecialchars($appointment['title']) ?></h3>
                                 <p>Client: <?= htmlspecialchars($appointment['username']) ?></p>
                                 <p><?= htmlspecialchars($appointment['description']) ?></p>
-                                <p>Date: <?= $appointment['appointment_date'] ?></p>
-                                <p>Time: <?= $appointment['appointment_time'] ?></p>
+                                <p>Date: <?= date('F d, Y', strtotime($appointment['appointment_date'])) ?></p>
+                                <p>Time: <?= date('h:i A', strtotime($appointment['appointment_time'])) ?></p>
                                 <p>Status: <span class="status-<?= $appointment['status'] ?>">
                                     <?= ucfirst($appointment['status']) ?>
                                 </span></p>
