@@ -27,7 +27,5 @@ CREATE TABLE appointments (
 );
 
 -- Create admin account
--- Username: admin
--- Password: admin123
 INSERT INTO users (username, password, role) VALUES 
 ('admin', '$2y$10$rGNWZbZKKNbJWQX5tpNyYOIuAWxX4o7ZVqk.YJo8Q8OOpNz/WGh3O', 'admin');

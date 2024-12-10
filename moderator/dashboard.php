@@ -49,223 +49,15 @@ $appointments = $stmt->fetchAll();
 <html>
 <head>
     <title>Moderator Dashboard</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>
-        .stats-container {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 30px;
-        }
-        .stat-box {
-            flex: 1;
-            margin: 0 10px;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-            color: white;
-        }
-        .pending-box {
-            background-color: #f0ad4e;
-        }
-        .approved-box {
-            background-color: #5cb85c;
-        }
-        .rejected-box {
-            background-color: #d9534f;
-        }
-        .stat-number {
-            font-size: 24px;
-            font-weight: bold;
-            margin: 10px 0;
-        }
-        .filter-buttons {
-            margin: 20px 0;
-        }
-        .filter-button {
-            padding: 10px 20px;
-            margin-right: 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .filter-button.all {
-            background-color: #6c757d;
-            color: white;
-        }
-        .filter-button.pending {
-            background-color: #f0ad4e;
-            color: white;
-        }
-        .filter-button.approved {
-            background-color: #5cb85c;
-            color: white;
-        }
-        .filter-button.rejected {
-            background-color: #d9534f;
-            color: white;
-        }
-        .filter-button.active {
-            outline: 3px solid #0275d8;
-        }
-        .status-pending { color: #f0ad4e; }
-        .status-approved { color: #5cb85c; }
-        .status-rejected { color: #d9534f; }
-
-        body {
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-        }
-
-        .layout {
-            display: flex;
-            min-height: 100vh;
-        }
-        
-        .sidebar {
-            width: 250px;
-            background-color: #2c3e50;
-            color: white;
-            padding: 20px;
-            position: fixed;
-            height: 100%;
-            left: 0;
-            top: 0;
-            transition: transform 0.3s ease;
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-            transform: translateX(-100%);
-        }
-
-        .sidebar.active {
-            transform: translateX(0);
-        }
-
-        .toggle-btn {
-            position: fixed;
-            left: 10px;
-            top: 20px;
-            background-color: #2c3e50;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            z-index: 1001;
-            transition: transform 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .toggle-btn.active {
-            transform: translateX(260px);
-        }
-
-        .toggle-btn:hover {
-            background-color: #34495e;
-        }
-
-        .toggle-btn i {
-            font-size: 18px;
-            width: 20px;
-            height: 20px;
-        }
-
-        .main-content {
-            flex: 1;
-            padding: 20px;
-            padding-left: 60px;
-            padding-top: 60px;
-            transition: margin-left 0.3s ease;
-            width: 100%;
-        }
-
-        .main-content.sidebar-active {
-            margin-left: 250px;
-        }
-
-        .logout-container {
-            padding: 20px;
-            padding-top: 0;
-            margin-top: auto;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .logout-link {
-            display: block;
-            padding: 12px;
-            background-color: #e74c3c;
-            color: white;
-            text-align: center;
-            text-decoration: none;
-            border-radius: 4px;
-            transition: background-color 0.3s;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .logout-link:hover {
-            background-color: #c0392b;
-        }
-
-        .nav-link {
-            background-color: #34495e;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            text-decoration: none;
-            color: white;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .nav-link:hover {
-            background-color: #2c3e50;
-        }
-
-        .nav-link.active {
-            background-color: #3498db;
-        }
-
-        .badge {
-            background-color: rgba(255, 255, 255, 0.2);
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 0.9em;
-        }
-
-        .sidebar h2 {
-            color: white;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #34495e;
-        }
-
-        .nav-links {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .sidebar-content {
-            flex: 1;
-            overflow-y: auto;
-        }
-    </style>
 </head>
 <body>
     <div class="layout">
         <!-- Sidebar Navigation -->
         <div class="sidebar" id="sidebar">
             <div class="sidebar-content">
-                <h2>Navigation</h2>
+                <h2>Menu</h2>
                 <div class="nav-links">
                     <a href="?status=all" class="nav-link <?= $filter_status === 'all' ? 'active' : '' ?>">
                         All Appointments
@@ -317,11 +109,10 @@ $appointments = $stmt->fetchAll();
                     </div>
                 </div>
 
-                <h2>Manage Appointments</h2>
-                
+                <!-- Appointments Section -->
                 <div class="appointments">
                     <?php if (empty($appointments)): ?>
-                        <p>No appointments found for the selected filter.</p>
+                        <p class="empty-state">No appointments found for the selected filter.</p>
                     <?php else: ?>
                         <?php foreach ($appointments as $appointment): ?>
                             <div class="appointment-card">
@@ -330,13 +121,13 @@ $appointments = $stmt->fetchAll();
                                 <p><?= htmlspecialchars($appointment['description']) ?></p>
                                 <p>Date: <?= date('F d, Y', strtotime($appointment['appointment_date'])) ?></p>
                                 <p>Time: <?= date('h:i A', strtotime($appointment['appointment_time'])) ?></p>
-                                <p>Status: <span class="status-<?= $appointment['status'] ?>">
+                                <p>Status: <span class="status-badge status-<?= $appointment['status'] ?>">
                                     <?= ucfirst($appointment['status']) ?>
                                 </span></p>
                                 
                                 <?php if ($appointment['moderator_name']): ?>
-                                    <p>Updated by: 
-                                        <?= ($appointment['updated_by'] == $_SESSION['user_id']) ? 'Me' : htmlspecialchars($appointment['moderator_name']) ?>
+                                    <p class="updated-by">
+                                        Updated by: <?= ($appointment['updated_by'] == $_SESSION['user_id']) ? 'Me' : htmlspecialchars($appointment['moderator_name']) ?>
                                     </p>
                                 <?php endif; ?>
                                 
@@ -357,7 +148,6 @@ $appointments = $stmt->fetchAll();
         </div>
     </div>
 
-    <!-- Add the JavaScript -->
     <script>
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
@@ -400,7 +190,7 @@ $appointments = $stmt->fetchAll();
             
             setTimeout(() => {
                 toggleBtn.style.transition = 'transform 0.3s ease';
-                sidebar.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+                sidebar.style.transition = 'transform 0.3s ease';
                 mainContent.style.transition = 'margin-left 0.3s ease';
             }, 50);
         }

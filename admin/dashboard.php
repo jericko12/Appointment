@@ -80,7 +80,7 @@ $moderator_stats = $stmt->fetchAll();
 <html>
 <head>
     <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         .stats-container {
@@ -475,7 +475,7 @@ $moderator_stats = $stmt->fetchAll();
                                 <p><?= htmlspecialchars($appointment['description']) ?></p>
                                 <p>Date: <?= date('F d, Y', strtotime($appointment['appointment_date'])) ?></p>
                                 <p>Time: <?= date('h:i A', strtotime($appointment['appointment_time'])) ?></p>
-                                <p>Status: <span class="status-<?= $appointment['status'] ?>">
+                                <p>Status: <span class="status-badge status-<?= $appointment['status'] ?>">
                                     <?= ucfirst($appointment['status']) ?>
                                 </span></p>
                                 
