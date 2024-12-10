@@ -335,7 +335,9 @@ $appointments = $stmt->fetchAll();
                                 </span></p>
                                 
                                 <?php if ($appointment['moderator_name']): ?>
-                                    <p>Updated by: <?= htmlspecialchars($appointment['moderator_name']) ?></p>
+                                    <p>Updated by: 
+                                        <?= ($appointment['updated_by'] == $_SESSION['user_id']) ? 'Me' : htmlspecialchars($appointment['moderator_name']) ?>
+                                    </p>
                                 <?php endif; ?>
                                 
                                 <form method="POST" action="update_appointment.php">

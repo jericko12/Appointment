@@ -65,6 +65,15 @@ $stmt = $pdo->query("
     FROM users WHERE role != 'admin'
 ");
 $user_counts = $stmt->fetch();
+
+// Add this query at the top
+$stmt = $pdo->query("
+    SELECT u.username, u.work_count 
+    FROM users u 
+    WHERE u.role = 'moderator' 
+    ORDER BY u.work_count DESC
+");
+$moderator_stats = $stmt->fetchAll();
 ?>
 
 <!DOCTYPE html>
@@ -329,6 +338,37 @@ $user_counts = $stmt->fetch();
         .nav-link.expanded .fa-chevron-down {
             transform: rotate(180deg);
         }
+
+        /* Moderator Stats */
+        .moderator-stats {
+            margin-top: 30px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .mod-stat-card {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .mod-stat-card h3 {
+            color: #2c3e50;
+            margin: 0 0 10px 0;
+        }
+
+        .mod-stat-card p {
+            color: #34495e;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin: 0;
+        }
     </style>
 </head>
 <body>
@@ -410,6 +450,19 @@ $user_counts = $stmt->fetch();
                     </div>
                 </div>
 
+                <!-- Moderator Stats -->
+                <div class="moderator-stats">
+                    <h2>Moderator Statistics</h2>
+                    <div class="stats-grid">
+                        <?php foreach ($moderator_stats as $mod): ?>
+                            <div class="mod-stat-card">
+                                <h3><?= htmlspecialchars($mod['username']) ?></h3>
+                                <p>Total Updates: <?= $mod['work_count'] ?></p>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+
                 <!-- Appointments Section -->
                 <div class="appointments" style="display: block;">
                     <?php if (empty($appointments)): ?>
@@ -427,7 +480,9 @@ $user_counts = $stmt->fetch();
                                 </span></p>
                                 
                                 <?php if ($appointment['moderator_name']): ?>
-                                    <p>Updated by: <?= htmlspecialchars($appointment['moderator_name']) ?></p>
+                                    <p>Updated by: 
+                                        <?= ($appointment['updated_by'] == $_SESSION['user_id']) ? 'Me' : htmlspecialchars($appointment['moderator_name']) ?>
+                                    </p>
                                 <?php endif; ?>
                                 
                                 <form method="POST" action="update_appointment.php">
@@ -458,6 +513,9 @@ $user_counts = $stmt->fetch();
                             <div class="appointment-card">
                                 <h3><?= htmlspecialchars($user['username']) ?></h3>
                                 <p>Role: <?= ucfirst($user['role']) ?></p>
+                                <?php if ($user['role'] == 'moderator'): ?>
+                                    <p>Total Work Done: <?= $user['work_count'] ?> appointments</p>
+                                <?php endif; ?>
                                 
                                 <form method="POST" action="update_user.php">
                                     <input type="hidden" name="user_id" value="<?= $user['id'] ?>">
